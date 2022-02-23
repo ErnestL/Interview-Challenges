@@ -24,7 +24,7 @@ Latitude            |32 bit floating point
 Longitude           |32 bit floating point
 UTC Timestamp       |64 bit unsigned integer (number of seconds since Epoch)
 
-### 10 GPS co-ordinates:
+### 10 co-ordinates:
 
 Position  |1          | 2        | 3         | 4        | 5        | 6         | 7         | 8        | 9        | 10
 ----------|-----------|----------|-----------|----------|----------|-----------|-----------|----------|----------|------------
