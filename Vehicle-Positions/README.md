@@ -1,4 +1,4 @@
-# Vehicle position challenge
+# Vehicle Position Challenge
 
 ## Task
 The binary data file _positions.dat_ contains a position for each of 2 million vehicles. Your task is to write a program that finds the nearest vehicle 
