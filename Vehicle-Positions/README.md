@@ -11,6 +11,12 @@ optimize for speed and improve on the benchmark to the best of your ability.
   * Use C language and GCC compiler toolchain (recommend MinGW/MSYS for Windows users)
   * Add your code to _solution.c_
   * Complete _makefile_ with rules to compile and clean
+     * Compile: Should only recompile code when any source code changed
+       * Disable optimization
+       * Disable generation of debug information (for final submission)
+       * Enable all general warnings
+       * Enable conversion warnings
+     * Clean: Should not show error if files does not exist
   * Add code to time execution of the content of the _main()_ function with millisecond accuracy
 
 ## How to submit your solution
