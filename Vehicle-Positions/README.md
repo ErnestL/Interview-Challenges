@@ -7,10 +7,19 @@ than the benchmark approach that simply loops through each of the 2 million posi
 optimize for speed and improve on the benchmark to the best of your ability.
 
 ## Specifics
+  * Use Git to clone the project template to your PC
   * Use C language and GCC compiler toolchain (recommend MinGW/MSYS for Windows users)
   * Add your code to _solution.c_
   * Complete _makefile_ with rules to compile and clean
   * Add code to time execution of the content of the _main()_ function with millisecond accuracy
+
+## How to submit your solution
+ * Create a private repository on Github (free)
+ * Add the following contributors to your repository:
+   * https://github.com/ErnestL
+   * https://github.com/CarloPutter
+ * Create a pull request for your solution
+ * Notify us of completion with an email containing your repository URL
 
 ## Additional information
 
