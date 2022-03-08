@@ -26,6 +26,9 @@ optimize for speed and improve on the benchmark to the best of your ability.
    * https://github.com/CarloPutter
  * Create a pull request for your solution
  * Notify us of completion with an email containing your repository URL
+   * Nix.Stephens@mixtelematics.com
+   * Ernest.Lotter@mixtelematics.com
+   * Carlo.Putter@mixtelematics.com
 
 ## Additional information
 
