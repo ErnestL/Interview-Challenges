@@ -23,6 +23,9 @@ optimize for speed and improve on the benchmark to the best of your ability.
 
 ## How to submit your solution
  * Create a private repository on Github (free)
+ * Update the README.md file to
+   * Explain your problem solving approach (design decisions) and your method
+   * Specify any assumptions made
  * Add the following contributors to your repository:
    * https://github.com/ErnestL
    * https://github.com/CarloPutter
