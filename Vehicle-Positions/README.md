@@ -9,6 +9,7 @@ optimize for speed and improve on the benchmark to the best of your ability.
 ## Specifics
   * Use Git to clone the project template to your PC
   * Use C language and GCC compiler toolchain (recommend MinGW/MSYS for Windows users)
+  * Your code should be compatible with 32 and 64 bit architectures
   * Add your code to _solution.c_
   * Complete _makefile_ with rules to compile and clean
      * Compile: Should only recompile code when any source code changed
@@ -17,7 +18,8 @@ optimize for speed and improve on the benchmark to the best of your ability.
        * Enable all general warnings
        * Enable conversion warnings
      * Clean: Should not show error if files does not exist
-  * Add code to time execution of the content of the _main()_ function with millisecond accuracy
+  * Add code to time execution of the content of the _main()_ function with millisecond accuracy. This includes reading of the file and anything else.
+  * You are allowed to use any means possible to speed up execution - this is not limited to code/algorithm optimization.
 
 ## How to submit your solution
  * Create a private repository on Github (free)
