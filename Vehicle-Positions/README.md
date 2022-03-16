@@ -18,7 +18,7 @@ optimize for speed and improve on the benchmark to the best of your ability.
        * Enable all general warnings
        * Enable conversion warnings
      * Clean: Should not show error if files does not exist
-  * Add code to time execution of the content of the _main()_ function with millisecond accuracy. This includes reading of the file and anything else.
+  * Add code to time execution of the content of the _main()_ function with millisecond accuracy. This includes reading of the file.
   * You are allowed to use any means possible to speed up execution - this is not limited to code/algorithm optimization.
 
 ## How to submit your solution
