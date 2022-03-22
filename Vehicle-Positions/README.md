@@ -2,9 +2,7 @@
 
 ## Task
 The binary data file _positions.dat_ contains a position for each of 2 million vehicles. Your task is to write a program that finds the nearest vehicle 
-positions in the data file to each of the 10 co-ordinates provided in the table below. Your program should be able to find all 10 closest positions in less time 
-than the benchmark approach that simply loops through each of the 2 million positions and keeps the closest to each of the 10 co-ordinates. The challenge is to 
-optimize for speed and improve on the benchmark to the best of your ability.
+positions in the data file to each of the 10 co-ordinates provided in the table below. Your program should be able to find the position ID's of all 10 closest positions in less time than the benchmark approach that simply loops through each of the 2 million positions and keeps the closest to each of the 10 co-ordinates. The challenge is to optimize for speed and improve on the benchmark to the best of your ability.
 
 ## Specifics
   * Use Git to clone the project template to your PC
