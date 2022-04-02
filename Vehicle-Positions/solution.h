@@ -27,5 +27,18 @@ struct vehicle_ref_coords
     int32_t position_id_nearest;
 };
 
+// structure to store vehicle stats
+struct vehicle_records
+{
+    int32_t position_id;
+    char vehicle_registration[10];
+    float latitute;
+    float longitude;
+    int64_t timestamp;
+} __attribute__((packed)) * vehicle_records_ptr;
+
+// holds total number records in positions.dat
+uint32_t number_records = 0;
+
 #define SOLUTION_H
 #endif

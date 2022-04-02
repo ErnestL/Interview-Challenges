@@ -2,6 +2,8 @@
 #include "records.h"
 #include <float.h>
 #include <math.h>
+
+static const char *positions_file = "./positions.dat";
 struct timespec t0, t1;
 
 // reference coordinates supplied as per challenge.
@@ -16,6 +18,6 @@ int main(void)
 {
     // begin measuring time taken to load and search
     START_TIMER(t0)
-
+    number_records = Get_Records(positions_file, &vehicle_records_ptr, sizeof(struct vehicle_records));
     STOP_TIMER(t1)
 }
