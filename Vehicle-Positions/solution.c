@@ -1,4 +1,5 @@
 #include "solution.h"
+#include "records.h"
 #include <float.h>
 #include <math.h>
 struct timespec t0, t1;
