@@ -20,4 +20,8 @@ int main(void)
     START_TIMER(t0)
     number_records = Get_Records(positions_file, &vehicle_records_ptr, sizeof(struct vehicle_records));
     STOP_TIMER(t1)
+
+    // elapsed time in milliseconds.
+    printf("delay(milliseconds): %" PRId64 "\n",
+           (int64_t)(t1.tv_sec - t0.tv_sec) * 1000 + ((int64_t)(t1.tv_nsec - t0.tv_nsec) / 1000000));
 }
