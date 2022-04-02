@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define __USE_XOPEN /* needed for M_PI */
+
 #ifndef SOLUTION_H
 
 #define START_TIMER(t0)                                                                                                \

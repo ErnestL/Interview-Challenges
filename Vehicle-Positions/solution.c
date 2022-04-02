@@ -25,3 +25,18 @@ int main(void)
     printf("delay(milliseconds): %" PRId64 "\n",
            (int64_t)(t1.tv_sec - t0.tv_sec) * 1000 + ((int64_t)(t1.tv_nsec - t0.tv_nsec) / 1000000));
 }
+
+/*
+ * Description:
+ * Parameters:
+ * Returns:
+ */
+static float GPS_Distance(float lat1, float lon1, float lat2, float lon2)
+{
+    float lat = 0.0F, dx = 0.0F, dy = 0.0F;
+    lat = (float)((lat1 + lat2) / 2 * 0.01745);
+    dx  = (float)(111.3 * cos(lat) * (lon1 - lon2));
+    dy  = (float)(111.3 * (lat1 - lat2));
+
+    return (float)sqrt(dx * dx + dy * dy);
+}
