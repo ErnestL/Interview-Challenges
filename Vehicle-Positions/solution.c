@@ -20,26 +20,26 @@ static struct vehicle_ref_coords ref_coords[] = {
     {34.115839F, -100.225732F, FLT_MAX, 0}, {32.335839F, -99.992232F, FLT_MAX, 0},
     {33.535339F, -94.792232F, FLT_MAX, 0},  {32.234235F, -100.222222F, FLT_MAX, 0}};
 
-static struct vehicle_ref_coords coords[THREADS][10] = {{{34.544909F, -102.100843F, FLT_MAX, 0},
-                                                         {32.345544F, -99.123124F, FLT_MAX, 0},
-                                                         {33.234235F, -100.214124F, FLT_MAX, 0},
-                                                         {35.195739F, -95.348899F, FLT_MAX, 0},
-                                                         {31.895839F, -97.789573F, FLT_MAX, 0},
-                                                         {32.895839F, -101.789573F, FLT_MAX, 0},
-                                                         {34.115839F, -100.225732F, FLT_MAX, 0},
-                                                         {32.335839F, -99.992232F, FLT_MAX, 0},
-                                                         {33.535339F, -94.792232F, FLT_MAX, 0},
-                                                         {32.234235F, -100.222222F, FLT_MAX, 0}},
-                                                        {{34.544909F, -102.100843F, FLT_MAX, 0},
-                                                         {32.345544F, -99.123124F, FLT_MAX, 0},
-                                                         {33.234235F, -100.214124F, FLT_MAX, 0},
-                                                         {35.195739F, -95.348899F, FLT_MAX, 0},
-                                                         {31.895839F, -97.789573F, FLT_MAX, 0},
-                                                         {32.895839F, -101.789573F, FLT_MAX, 0},
-                                                         {34.115839F, -100.225732F, FLT_MAX, 0},
-                                                         {32.335839F, -99.992232F, FLT_MAX, 0},
-                                                         {33.535339F, -94.792232F, FLT_MAX, 0},
-                                                         {32.234235F, -100.222222F, FLT_MAX, 0}}};
+static struct vehicle_ref_coords coords[THREADS][10] = {{{0.0F, 0.0F, FLT_MAX, 0}}};
+//  {0.0F, 0.0F, FLT_MAX, 0},
+//  {0.0F, 0.0F, FLT_MAX, 0},
+//  {0.0F, 0.0F, FLT_MAX, 0},
+//  {0.0F, 0.0F, FLT_MAX, 0},
+//  {0.0F, 0.0F, FLT_MAX, 0},
+//  {0.0F, 0.0F, FLT_MAX, 0},
+//  {0.0F, 0.0F, FLT_MAX, 0},
+//  {0.0F, 0.0F, FLT_MAX, 0},
+//  {0.0F, 0.0F, FLT_MAX, 0}},
+// {{0.0F, 0.0F, FLT_MAX, 0},
+//  {0.0F, 0.0F, FLT_MAX, 0},
+//  {0.0F, 0.0F, FLT_MAX, 0},
+//  {0.0F, 0.0F, FLT_MAX, 0},
+//  {0.0F, 0.0F, FLT_MAX, 0},
+//  {0.0F, 0.0F, FLT_MAX, 0},
+//  {0.0F, 0.0F, FLT_MAX, 0},
+//  {0.0F, 0.0F, FLT_MAX, 0},
+//  {0.0F, 0.0F, FLT_MAX, 0},
+//  {0.0F, 0.0F, FLT_MAX, 0}}};
 
 static void *search(void *id);
 
@@ -96,6 +96,11 @@ static float gps_distance(float lat1, float lon1, float lat2, float lon2)
     return (float)sqrt(dx * dx + dy * dy);
 }
 
+/*
+ * Description:
+ * Parameters:
+ * Returns:
+ */
 static void *search(void *id)
 {
     float distance = 0.0f;
@@ -124,9 +129,6 @@ static void *search(void *id)
                                       vehicle_records_ptr[index].latitute, vehicle_records_ptr[index].longitude)) <
                     coords[0][coords_index].distance)
                 {
-                    coords[0][coords_index].distance            = distance;
-                    coords[0][coords_index].latitute_ref        = vehicle_records_ptr[index].latitute;
-                    coords[0][coords_index].longitude_ref       = vehicle_records_ptr[index].longitude;
                     coords[0][coords_index].position_id_nearest = vehicle_records_ptr[index].position_id;
                 }
             }
@@ -140,9 +142,6 @@ static void *search(void *id)
                                       vehicle_records_ptr[index].latitute, vehicle_records_ptr[index].longitude)) <
                     coords[1][coords_index].distance)
                 {
-                    coords[1][coords_index].distance            = distance;
-                    coords[1][coords_index].latitute_ref        = vehicle_records_ptr[index].latitute;
-                    coords[1][coords_index].longitude_ref       = vehicle_records_ptr[index].longitude;
                     coords[1][coords_index].position_id_nearest = vehicle_records_ptr[index].position_id;
                 }
             }
