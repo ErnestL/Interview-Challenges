@@ -11,7 +11,7 @@
  *  Parameters:
  *  Returns:
  */
-off_t Get_File_Size(const char *const file_name)
+static off_t get_file_size(const char *const file_name)
 {
     struct stat sb;
 
@@ -28,14 +28,14 @@ off_t Get_File_Size(const char *const file_name)
  *  Parameters:
  *  Returns:
  */
-uint32_t Get_Records(const char *file_name, struct vehicle_records **vehicle_records_ptr, const uint32_t record_size)
+uint32_t get_records(const char *file_name, struct vehicle_records **vehicle_records_ptr, const uint32_t record_size)
 {
     uint32_t number_records = 0;
     off_t file_size         = 0;
     size_t records_read     = 0;
     FILE *file_ptr          = NULL;
 
-    file_size = Get_File_Size(file_name);
+    file_size = get_file_size(file_name);
 
     if ((file_ptr = fopen(file_name, "rb")) == NULL)
     {
@@ -43,8 +43,7 @@ uint32_t Get_Records(const char *file_name, struct vehicle_records **vehicle_rec
         exit(EXIT_FAILURE);
     }
 
-    // determine number of record entries in file by looking at the last record
-    // number entry
+    /* determine number of record entries in file by looking at the last record number entry */
     if ((fseek(file_ptr, ((int32_t)record_size * -1), SEEK_END)) != 0)
     {
         fprintf(stderr, "Error attempting to move to end of file: '%s': %s.\n", file_name, strerror(errno));
@@ -59,7 +58,7 @@ uint32_t Get_Records(const char *file_name, struct vehicle_records **vehicle_rec
         exit(EXIT_FAILURE);
     }
 
-    // populate structures from beginning of file
+    /* populate structures from beginning of file */
     if ((fseek(file_ptr, 0L, SEEK_SET)) != 0)
     {
         fprintf(stderr, "Error attempting to move to start of file: '%s': %s.\n", file_name, strerror(errno));

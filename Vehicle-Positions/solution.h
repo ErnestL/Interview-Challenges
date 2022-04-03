@@ -4,7 +4,10 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define __USE_XOPEN /* needed for M_PI */
+/* needed for M_PI */
+#define __USE_XOPEN
+
+#define THREADS 2
 
 #ifndef SOLUTION_H
 
@@ -20,37 +23,27 @@
         exit(EXIT_FAILURE);                                                                                            \
     }
 
-// structure to store reference coords
+/* structure to store supplied reference coords */
 struct vehicle_ref_coords
-{
-    const float latitute_ref;
-    const float longitude_ref;
-    float distance;
-    int32_t position_id_nearest;
-};
-
-struct vehicle_ref_coords_test
 {
     float latitute_ref;
     float longitude_ref;
     float distance;
-    int32_t position_id_nearest;
+    uint32_t position_id_nearest;
 };
 
-// structure to store vehicle stats
+/* populated with vehicle data from file */
 struct vehicle_records
 {
-    int32_t position_id;
+    uint32_t position_id;
     char vehicle_registration[10];
     float latitute;
     float longitude;
-    int64_t timestamp;
+    uint64_t timestamp;
 } __attribute__((packed)) * vehicle_records_ptr;
 
-void Find_Nearest(struct vehicle_ref_coords[], uint32_t, struct vehicle_records[], uint32_t);
-
-// holds total number records in positions.dat
-uint32_t number_records = 0;
+/* holds total number records in positions.dat */
+uint32_t number_records;
 
 #define SOLUTION_H
 #endif
