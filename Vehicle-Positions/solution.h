@@ -39,6 +39,8 @@ struct vehicle_records
     int64_t timestamp;
 } __attribute__((packed)) * vehicle_records_ptr;
 
+void Find_Nearest(struct vehicle_ref_coords[], uint32_t, struct vehicle_records[], uint32_t);
+
 // holds total number records in positions.dat
 uint32_t number_records = 0;
 
