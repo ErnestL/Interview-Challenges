@@ -27,7 +27,7 @@ endif
 
 # link
 $(prog): $(objs)
-	gcc $(cflags) $(objs) -o $(prog) -lm
+	gcc $(cflags) $(objs) -o $(prog) -lm -lpthread
 
 # pull in dependency info for *existing* .o files
 -include $(objs:.o=.d)

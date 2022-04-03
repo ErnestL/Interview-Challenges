@@ -29,6 +29,14 @@ struct vehicle_ref_coords
     int32_t position_id_nearest;
 };
 
+struct vehicle_ref_coords_test
+{
+    float latitute_ref;
+    float longitude_ref;
+    float distance;
+    int32_t position_id_nearest;
+};
+
 // structure to store vehicle stats
 struct vehicle_records
 {
