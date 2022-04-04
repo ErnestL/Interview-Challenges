@@ -9,6 +9,9 @@
 
 #define THREADS 2
 
+/* number of supplied samples */
+#define SAMPLES 10
+
 #ifndef SOLUTION_H
 
 #define START_TIMER(t0)                                                                                                \

@@ -20,26 +20,26 @@ static struct vehicle_ref_coords ref_coords[] = {
     {34.115839F, -100.225732F, FLT_MAX, 0}, {32.335839F, -99.992232F, FLT_MAX, 0},
     {33.535339F, -94.792232F, FLT_MAX, 0},  {32.234235F, -100.222222F, FLT_MAX, 0}};
 
-static struct vehicle_ref_coords coords[THREADS][10] = {{{0.0F, 0.0F, FLT_MAX, 0}}};
-//  {0.0F, 0.0F, FLT_MAX, 0},
-//  {0.0F, 0.0F, FLT_MAX, 0},
-//  {0.0F, 0.0F, FLT_MAX, 0},
-//  {0.0F, 0.0F, FLT_MAX, 0},
-//  {0.0F, 0.0F, FLT_MAX, 0},
-//  {0.0F, 0.0F, FLT_MAX, 0},
-//  {0.0F, 0.0F, FLT_MAX, 0},
-//  {0.0F, 0.0F, FLT_MAX, 0},
-//  {0.0F, 0.0F, FLT_MAX, 0}},
-// {{0.0F, 0.0F, FLT_MAX, 0},
-//  {0.0F, 0.0F, FLT_MAX, 0},
-//  {0.0F, 0.0F, FLT_MAX, 0},
-//  {0.0F, 0.0F, FLT_MAX, 0},
-//  {0.0F, 0.0F, FLT_MAX, 0},
-//  {0.0F, 0.0F, FLT_MAX, 0},
-//  {0.0F, 0.0F, FLT_MAX, 0},
-//  {0.0F, 0.0F, FLT_MAX, 0},
-//  {0.0F, 0.0F, FLT_MAX, 0},
-//  {0.0F, 0.0F, FLT_MAX, 0}}};
+static struct vehicle_ref_coords coords[THREADS][10] = {{{0.0F, 0.0F, FLT_MAX},
+                                                         {0.0F, 0.0F, FLT_MAX, 0},
+                                                         {0.0F, 0.0F, FLT_MAX, 0},
+                                                         {0.0F, 0.0F, FLT_MAX, 0},
+                                                         {0.0F, 0.0F, FLT_MAX, 0},
+                                                         {0.0F, 0.0F, FLT_MAX, 0},
+                                                         {0.0F, 0.0F, FLT_MAX, 0},
+                                                         {0.0F, 0.0F, FLT_MAX, 0},
+                                                         {0.0F, 0.0F, FLT_MAX, 0},
+                                                         {0.0F, 0.0F, FLT_MAX, 0}},
+                                                        {{0.0F, 0.0F, FLT_MAX, 0},
+                                                         {0.0F, 0.0F, FLT_MAX, 0},
+                                                         {0.0F, 0.0F, FLT_MAX, 0},
+                                                         {0.0F, 0.0F, FLT_MAX, 0},
+                                                         {0.0F, 0.0F, FLT_MAX, 0},
+                                                         {0.0F, 0.0F, FLT_MAX, 0},
+                                                         {0.0F, 0.0F, FLT_MAX, 0},
+                                                         {0.0F, 0.0F, FLT_MAX, 0},
+                                                         {0.0F, 0.0F, FLT_MAX, 0},
+                                                         {0.0F, 0.0F, FLT_MAX, 0}}};
 
 static void *search(void *id);
 
@@ -69,11 +69,24 @@ int main(void)
         pthread_join(thread_array[index], NULL);
     }
 
+    for (size_t index = 0; index < SAMPLES; index++)
+    {
+        ref_coords[index].position_id_nearest = coords[0][index].distance < coords[1][index].distance
+                                                    ? coords[0][index].position_id_nearest
+                                                    : coords[1][index].position_id_nearest;
+    }
+
     STOP_TIMER(t1)
 
     /* elapsed time in milliseconds */
-    printf("delay(milliseconds): %" PRId64 "\n",
+    printf("delay(milliseconds): %" PRId64 "\n\n",
            (int64_t)(t1.tv_sec - t0.tv_sec) * 1000 + ((int64_t)(t1.tv_nsec - t0.tv_nsec) / 1000000));
+
+    for (size_t index = 0; index < SAMPLES; index++)
+    {
+        printf("Position: %zu Latitude: %f Longitude: %f Closest Position Id: %d\n", (index + 1),
+               ref_coords[index].latitute_ref, ref_coords[index].longitude_ref, ref_coords[index].position_id_nearest);
+    }
 
     free(vehicle_records_ptr);
     free(thread_array);
@@ -82,9 +95,9 @@ int main(void)
 }
 
 /*
- * Description:
+ * Description: calculates and returns distance in kilometers
  * Parameters:
- * Returns:
+ * Returns: float - distance in kilometers
  */
 static float gps_distance(float lat1, float lon1, float lat2, float lon2)
 {
@@ -122,7 +135,7 @@ static void *search(void *id)
     {
         if (*myid == 0)
         {
-            for (size_t coords_index = 0; coords_index < 10; coords_index++)
+            for (size_t coords_index = 0; coords_index < SAMPLES; coords_index++)
             {
                 if ((distance =
                          gps_distance(ref_coords[coords_index].latitute_ref, ref_coords[coords_index].longitude_ref,
@@ -130,12 +143,13 @@ static void *search(void *id)
                     coords[0][coords_index].distance)
                 {
                     coords[0][coords_index].position_id_nearest = vehicle_records_ptr[index].position_id;
+                    coords[0][coords_index].distance            = distance;
                 }
             }
         }
         else
         {
-            for (size_t coords_index = 0; coords_index < 10; coords_index++)
+            for (size_t coords_index = 0; coords_index < SAMPLES; coords_index++)
             {
                 if ((distance =
                          gps_distance(ref_coords[coords_index].latitute_ref, ref_coords[coords_index].longitude_ref,
@@ -143,6 +157,7 @@ static void *search(void *id)
                     coords[1][coords_index].distance)
                 {
                     coords[1][coords_index].position_id_nearest = vehicle_records_ptr[index].position_id;
+                    coords[1][coords_index].distance            = distance;
                 }
             }
         }
