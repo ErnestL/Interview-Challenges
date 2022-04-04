@@ -7,9 +7,9 @@
 #include <sys/stat.h>
 
 /*
- *  Description: This routine returns the size of the file it is called with.
- *  Parameters:
- *  Returns:
+ *  Description: This routine returns the actual size of the file
+ *  Parameters: null-terminated string of file name on disk
+ *  Returns: size of actual file in bytes
  */
 static off_t get_file_size(const char *const file_name)
 {
@@ -24,9 +24,11 @@ static off_t get_file_size(const char *const file_name)
 }
 
 /*
- *  Description: This routine reads the entire file into memory.
- *  Parameters:
- *  Returns:
+ *  Description:  This routine reads the entire file from disk and copies to heap
+ *  Parameters:   file_name -> null-terminated string of file name on disk
+ *                vehicle_records_ptr-> holds pointer to address of allocated heap memory
+ *                record_size -> size in bytes of the structure used to hold a record from disk
+ *  Returns:      total number of records stored in file
  */
 uint32_t get_records(const char *file_name, struct vehicle_records **vehicle_records_ptr, const uint32_t record_size)
 {

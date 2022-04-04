@@ -95,9 +95,12 @@ int main(void)
 }
 
 /*
- * Description: calculates and returns distance in kilometers
- * Parameters:
- * Returns: float - distance in kilometers
+ * Description: calculates distance in kilometers given two lat/lon coordinates
+ * Parameter:   lat1 -> latitude from first lat/lon coordinate
+ *              lon1 -> longitude from first lat/lon coordinate
+ *              lat2 -> latitude  from second lat/lon coordinate
+ *              lon2 -> longitude from second lat/lon coordinate
+ * Returns: float -> distance in kilometers
  */
 static float gps_distance(float lat1, float lon1, float lat2, float lon2)
 {
@@ -110,9 +113,11 @@ static float gps_distance(float lat1, float lon1, float lat2, float lon2)
 }
 
 /*
- * Description:
- * Parameters:
- * Returns:
+ * Description: called by two independent threads. Each of these threads get half of the array
+ * to search through i.e. first thread searches first half of array while the second thread
+ * searches second half of the arrray
+ * Parameters: id -> thread ID
+ * Returns: void
  */
 static void *search(void *id)
 {
