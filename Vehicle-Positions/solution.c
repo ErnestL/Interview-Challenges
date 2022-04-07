@@ -47,8 +47,7 @@ static void create_threads();
 
 int main(void)
 {
-    /* begin measuring time taken to load and search */
-    START_TIMER(t0)
+    START_TIMER(t0) /* begin measuring time taken to load and search */
 
     /* retrieve all coordinates from file on disk and copy onto heap for processing */
     length = get_records(positions_file, &vehicle_records_ptr, sizeof(struct vehicle_records));
@@ -57,8 +56,7 @@ int main(void)
 
     STOP_TIMER(t1)
 
-    /* elapsed time in milliseconds */
-    printf("delay(milliseconds): %" PRId64 "\n\n",
+    printf("delay(milliseconds): %" PRId64 "\n\n", /* elapsed time in milliseconds */
            (int64_t)(t1.tv_sec - t0.tv_sec) * 1000 + ((int64_t)(t1.tv_nsec - t0.tv_nsec) / 1000000));
 
     print_results(); /* print to console nearest position ID's */
@@ -114,32 +112,14 @@ static void *search(void *id)
     /* perform search operation */
     for (index = start; index < end; index++)
     {
-        if (*myid == 0)
+        for (size_t coords_index = 0; coords_index < SAMPLES; coords_index++)
         {
-            for (size_t coords_index = 0; coords_index < SAMPLES; coords_index++)
+            if ((distance = gps_distance(ref_coords[coords_index].latitute_ref, ref_coords[coords_index].longitude_ref,
+                                         vehicle_records_ptr[index].latitute, vehicle_records_ptr[index].longitude)) <
+                coords[*myid][coords_index].distance)
             {
-                if ((distance =
-                         gps_distance(ref_coords[coords_index].latitute_ref, ref_coords[coords_index].longitude_ref,
-                                      vehicle_records_ptr[index].latitute, vehicle_records_ptr[index].longitude)) <
-                    coords[0][coords_index].distance)
-                {
-                    coords[0][coords_index].position_id_nearest = vehicle_records_ptr[index].position_id;
-                    coords[0][coords_index].distance            = distance;
-                }
-            }
-        }
-        else
-        {
-            for (size_t coords_index = 0; coords_index < SAMPLES; coords_index++)
-            {
-                if ((distance =
-                         gps_distance(ref_coords[coords_index].latitute_ref, ref_coords[coords_index].longitude_ref,
-                                      vehicle_records_ptr[index].latitute, vehicle_records_ptr[index].longitude)) <
-                    coords[1][coords_index].distance)
-                {
-                    coords[1][coords_index].position_id_nearest = vehicle_records_ptr[index].position_id;
-                    coords[1][coords_index].distance            = distance;
-                }
+                coords[*myid][coords_index].position_id_nearest = vehicle_records_ptr[index].position_id;
+                coords[*myid][coords_index].distance            = distance;
             }
         }
     }
