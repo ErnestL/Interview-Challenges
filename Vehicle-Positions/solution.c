@@ -4,11 +4,11 @@
 #include <math.h>
 #include <pthread.h>
 
-static const char *const positions_file = "./positions.dat";
+static const char *const positions_file = "./positions.dat"; /* file containing coordinates */
 static struct timespec t0, t1;
 
 static size_t *thread_ids      = NULL;
-static uint32_t length         = 0;       /* set in main */
+static uint32_t length         = 0;       /* set in main. Used in thread function */
 static const uint32_t nthreads = THREADS; /* number of threads */
 static pthread_t *thread_array = NULL;    /* pointer to future thread array */
 
@@ -42,39 +42,18 @@ static struct vehicle_ref_coords coords[THREADS][10] = {{{0.0F, 0.0F, FLT_MAX},
                                                          {0.0F, 0.0F, FLT_MAX, 0}}};
 
 static void *search(void *id);
+static void print_results();
+static void create_threads();
 
 int main(void)
 {
-    /* Allocate space for thread structs and identifiers */
-    thread_array = malloc(nthreads * sizeof(pthread_t));
-    thread_ids   = malloc(nthreads * sizeof(long));
-
     /* begin measuring time taken to load and search */
     START_TIMER(t0)
-    number_records = get_records(positions_file, &vehicle_records_ptr, sizeof(struct vehicle_records));
 
-    length = number_records;
+    /* retrieve all coordinates from file on disk and copy onto heap for processing */
+    length = get_records(positions_file, &vehicle_records_ptr, sizeof(struct vehicle_records));
 
-    /* Assign each thread an ID and create all the threads */
-    for (size_t index = 0; index < nthreads; index++)
-    {
-        thread_ids[index] = index;
-        pthread_create(&thread_array[index], NULL, search, &thread_ids[index]);
-    }
-
-    /* Join all the threads. Main will pause in this loop until all threads
-     * have returned from the thread function. */
-    for (size_t index = 0; index < nthreads; index++)
-    {
-        pthread_join(thread_array[index], NULL);
-    }
-
-    for (size_t index = 0; index < SAMPLES; index++)
-    {
-        ref_coords[index].position_id_nearest = coords[0][index].distance < coords[1][index].distance
-                                                    ? coords[0][index].position_id_nearest
-                                                    : coords[1][index].position_id_nearest;
-    }
+    create_threads();
 
     STOP_TIMER(t1)
 
@@ -82,15 +61,12 @@ int main(void)
     printf("delay(milliseconds): %" PRId64 "\n\n",
            (int64_t)(t1.tv_sec - t0.tv_sec) * 1000 + ((int64_t)(t1.tv_nsec - t0.tv_nsec) / 1000000));
 
-    for (size_t index = 0; index < SAMPLES; index++)
-    {
-        printf("Position: %zu Latitude: %f Longitude: %f Closest Position Id: %d\n", (index + 1),
-               ref_coords[index].latitute_ref, ref_coords[index].longitude_ref, ref_coords[index].position_id_nearest);
-    }
+    print_results(); /* print to console nearest position ID's */
 
     free(vehicle_records_ptr);
-    free(thread_array);
     free(thread_ids);
+    free(thread_array);
+
     return 0;
 }
 
@@ -102,7 +78,7 @@ int main(void)
  *              lon2 -> longitude from second lat/lon coordinate
  * Returns: float -> distance in kilometers
  */
-static float gps_distance(float lat1, float lon1, float lat2, float lon2)
+float gps_distance(float lat1, float lon1, float lat2, float lon2)
 {
     float lat = 0.0F, dx = 0.0F, dy = 0.0F;
     lat = (float)((lat1 + lat2) / 2 * 0.01745);
@@ -169,4 +145,62 @@ static void *search(void *id)
     }
 
     return NULL;
+}
+
+/*
+ * Description: prints out the supplied reference coordinates along with the calculated position ID's from
+ * records in database of nearest points
+ * Parameters: none
+ * Returns: void
+ */
+void print_results()
+{
+    /* determine the shorter distance stored in each of the threads. The shorter distance is what we want */
+    for (size_t index = 0; index < SAMPLES; index++)
+    {
+        ref_coords[index].position_id_nearest = coords[0][index].distance < coords[1][index].distance
+                                                    ? coords[0][index].position_id_nearest
+                                                    : coords[1][index].position_id_nearest;
+    }
+
+    for (size_t index = 0; index < SAMPLES; index++)
+    {
+        printf("Position: %zu Latitude: %f Longitude: %f Closest Position Id: %d\n", (index + 1),
+               ref_coords[index].latitute_ref, ref_coords[index].longitude_ref, ref_coords[index].position_id_nearest);
+    }
+
+    return;
+}
+
+/*
+ * Description: creates space for specified number of threads specified in global space. If threads are created
+ * successfuly they will immediately run.
+ * Parameters: none
+ * Returns: void
+ */
+void create_threads()
+{
+    /* Allocate space for thread structs and identifiers */
+    if (((thread_array = malloc(nthreads * sizeof(pthread_t))) == NULL) ||
+        ((thread_ids = malloc(nthreads * sizeof(long))) == NULL))
+    {
+        fprintf(stderr, "Not enough memory.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    /* Assign each thread an ID and create all the threads */
+    for (size_t index = 0; index < nthreads; index++)
+    {
+        thread_ids[index] = index;
+        pthread_create(&thread_array[index], NULL, search, &thread_ids[index]);
+    }
+
+    /* Join all the threads. Main will pause in this loop until all threads
+     * have returned from the thread function. */
+    for (size_t index = 0; index < nthreads; index++)
+    {
+        pthread_join(thread_array[index], NULL);
+    }
+
+    return;
 }
