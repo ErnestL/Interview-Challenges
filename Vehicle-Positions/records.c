@@ -45,16 +45,10 @@ uint32_t get_records(const char *file_name, struct vehicle_records **vehicle_rec
         exit(EXIT_FAILURE);
     }
 
-    /* determine number of record entries in file by looking at the last record number entry */
-    if ((fseek(file_ptr, ((int32_t)record_size * -1), SEEK_END)) != 0)
-    {
-        fprintf(stderr, "Error attempting to move to end of file: '%s': %s.\n", file_name, strerror(errno));
-        exit(EXIT_FAILURE);
-    }
+    number_records = (uint32_t)file_size / record_size;
 
-    fread(&number_records, sizeof(int32_t), 1, file_ptr);
-
-    if ((*vehicle_records_ptr = (struct vehicle_records *)malloc(record_size * number_records)) == NULL)
+    /* reserve enough memory on heap for entire database read from disk */
+    if ((*vehicle_records_ptr = (struct vehicle_records *)malloc(record_size * (number_records))) == NULL)
     {
         fprintf(stderr, "Not enough memory.\n");
         exit(EXIT_FAILURE);
@@ -70,10 +64,8 @@ uint32_t get_records(const char *file_name, struct vehicle_records **vehicle_rec
 
     if ((records_read * record_size) != file_size)
     {
-        fprintf(stderr,
-                "Short read of '%s': expected %d records "
-                "but got %zu: %s.\n",
-                file_name, number_records, records_read, strerror(errno));
+        fprintf(stderr, "Short read of '%s': expected %d records but got %zu: %s.\n", file_name, number_records,
+                records_read, strerror(errno));
 
         exit(EXIT_FAILURE);
     }
