@@ -20,6 +20,13 @@ Compiler optimizations were disabled for both debug and release versions as stip
 
 When executed, the program(solution) will display all of the ten supplied coordinates along with the Position ID extracted from the positions.dat file of the closest point.
 
+The timespec_get function was introduced in C11 and appears to make use of the clock_gettime function. Linux x86-64 has a clock_gettime system call.
+
+Note that this is not a fail-safe micro-benchmarking method because:
+
+- man clock_gettime says that this measure may have discontinuities if you change system time while your program runs. Thi should be a rare event and so should be able to ignore it.
+- this measures Wall time, so if the scheduler forgets about your task, it will appear to run for longer.
+
 # Shortcomings:
 
 Unfortunately the code currently won't scale beyond two threads due to the way it was written. More thought would need to be applied here although modest gains were observed when compared to the single threaded version.
