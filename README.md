@@ -27,6 +27,8 @@ Note that this is not a fail-safe micro-benchmarking method because:
 - man clock_gettime says that this measure may have discontinuities if you change system time while your program runs. Thi should be a rare event and so should be able to ignore it.
 - this measures Wall time, so if the scheduler forgets about your task, it will appear to run for longer.
 
+Linux provides the prof and gprof profiling tools that will provide valuable inside into which functions take the most time to execute and where optimizations need to be made the mot.
+
 # Shortcomings:
 
 Unfortunately the code currently won't scale beyond two threads due to the way it was written. More thought would need to be applied here although modest gains were observed when compared to the single threaded version.
