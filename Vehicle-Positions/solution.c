@@ -1,4 +1,5 @@
 #include "solution.h"
+#include "misc.h"
 #include "records.h"
 #include <float.h>
 #include <math.h>
@@ -20,34 +21,19 @@ static struct vehicle_ref_coords ref_coords[] = {
     {34.115839F, -100.225732F, FLT_MAX, 0}, {32.335839F, -99.992232F, FLT_MAX, 0},
     {33.535339F, -94.792232F, FLT_MAX, 0},  {32.234235F, -100.222222F, FLT_MAX, 0}};
 
-static struct vehicle_ref_coords coords[THREADS][10] = {{{0.0F, 0.0F, FLT_MAX},
-                                                         {0.0F, 0.0F, FLT_MAX, 0},
-                                                         {0.0F, 0.0F, FLT_MAX, 0},
-                                                         {0.0F, 0.0F, FLT_MAX, 0},
-                                                         {0.0F, 0.0F, FLT_MAX, 0},
-                                                         {0.0F, 0.0F, FLT_MAX, 0},
-                                                         {0.0F, 0.0F, FLT_MAX, 0},
-                                                         {0.0F, 0.0F, FLT_MAX, 0},
-                                                         {0.0F, 0.0F, FLT_MAX, 0},
-                                                         {0.0F, 0.0F, FLT_MAX, 0}},
-                                                        {{0.0F, 0.0F, FLT_MAX, 0},
-                                                         {0.0F, 0.0F, FLT_MAX, 0},
-                                                         {0.0F, 0.0F, FLT_MAX, 0},
-                                                         {0.0F, 0.0F, FLT_MAX, 0},
-                                                         {0.0F, 0.0F, FLT_MAX, 0},
-                                                         {0.0F, 0.0F, FLT_MAX, 0},
-                                                         {0.0F, 0.0F, FLT_MAX, 0},
-                                                         {0.0F, 0.0F, FLT_MAX, 0},
-                                                         {0.0F, 0.0F, FLT_MAX, 0},
-                                                         {0.0F, 0.0F, FLT_MAX, 0}}};
+static struct vehicle_ref_coords coords[THREADS][10];
 
 static void *search(void *id);
 static void print_results();
 static void create_threads();
+static void initArray();
+static inline float gps_distance(float lat1, float lon1, float lat2, float lon2);
 
 int main(void)
 {
     START_TIMER(t0) /* begin measuring time taken to load and search */
+
+    initArray();
 
     /* retrieve all coordinates from file on disk and copy onto heap for processing */
     length = get_records(positions_file, &vehicle_records_ptr, sizeof(struct vehicle_records));
@@ -76,7 +62,7 @@ int main(void)
  *              lon2 -> longitude from second lat/lon coordinate
  * Returns: float -> distance in kilometers
  */
-float gps_distance(float lat1, float lon1, float lat2, float lon2)
+inline float gps_distance(float lat1, float lon1, float lat2, float lon2)
 {
     float lat = 0.0F, dx = 0.0F, dy = 0.0F;
     lat = (float)((lat1 + lat2) / 2 * 0.01745);
@@ -136,13 +122,20 @@ static void *search(void *id)
 void print_results()
 {
     /* determine the shorter distance stored in each of the threads. The shorter distance is what we want */
-    for (size_t index = 0; index < SAMPLES; index++)
+    if (THREADS == 1)
     {
-        ref_coords[index].position_id_nearest = coords[0][index].distance < coords[1][index].distance
-                                                    ? coords[0][index].position_id_nearest
-                                                    : coords[1][index].position_id_nearest;
+        for (size_t index = 0; index < SAMPLES; index++)
+            ref_coords[index].position_id_nearest = coords[0][index].position_id_nearest;
     }
-
+    else
+    {
+        for (size_t index = 0; index < SAMPLES; index++)
+        {
+            ref_coords[index].position_id_nearest = coords[0][index].distance < coords[1][index].distance
+                                                        ? coords[0][index].position_id_nearest
+                                                        : coords[1][index].position_id_nearest;
+        }
+    }
     for (size_t index = 0; index < SAMPLES; index++)
     {
         printf("Position: %zu Latitude: %f Longitude: %f Closest Position Id: %d\n", (index + 1),
@@ -183,4 +176,20 @@ void create_threads()
     }
 
     return;
+}
+
+/*
+ * Description:
+ * Parameters: none
+ * Returns: void
+ */
+void initArray()
+{
+    for (size_t outer = 0; outer < THREADS; outer++)
+    {
+        for (size_t inner = 0; inner < SAMPLES; inner++)
+        {
+            coords[outer][inner].distance = FLT_MAX;
+        }
+    }
 }

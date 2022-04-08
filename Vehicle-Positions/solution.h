@@ -4,6 +4,10 @@
 #include <stdlib.h>
 #include <time.h>
 
+#ifndef SOLUTION_H
+
+#define SOLUTION_H
+
 /* needed for M_PI */
 #define __USE_XOPEN
 
@@ -11,8 +15,6 @@
 
 /* number of supplied samples */
 #define SAMPLES 10
-
-#ifndef SOLUTION_H
 
 #define START_TIMER(t0)                                                                                                \
     if (timespec_get(&t0, TIME_UTC) != TIME_UTC)                                                                       \
@@ -48,5 +50,4 @@ struct vehicle_records
 /* holds total number records in positions.dat */
 uint32_t number_records;
 
-#define SOLUTION_H
 #endif
