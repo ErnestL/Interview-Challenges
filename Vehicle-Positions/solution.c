@@ -27,7 +27,6 @@ static void *search(void *id);
 static void print_results();
 static void create_threads();
 static void initArray();
-static inline float gps_distance(float lat1, float lon1, float lat2, float lon2);
 
 int main(void)
 {
@@ -52,24 +51,6 @@ int main(void)
     free(thread_array);
 
     return 0;
-}
-
-/*
- * Description: calculates distance in kilometers given two lat/lon coordinates
- * Parameter:   lat1 -> latitude from first lat/lon coordinate
- *              lon1 -> longitude from first lat/lon coordinate
- *              lat2 -> latitude  from second lat/lon coordinate
- *              lon2 -> longitude from second lat/lon coordinate
- * Returns: float -> distance in kilometers
- */
-inline float gps_distance(float lat1, float lon1, float lat2, float lon2)
-{
-    float lat = 0.0F, dx = 0.0F, dy = 0.0F;
-    lat = (float)((lat1 + lat2) / 2 * 0.01745);
-    dx  = (float)(111.3 * cos(lat) * (lon1 - lon2));
-    dy  = (float)(111.3 * (lat1 - lat2));
-
-    return (float)sqrt(dx * dx + dy * dy);
 }
 
 /*
@@ -121,21 +102,11 @@ static void *search(void *id)
  */
 void print_results()
 {
-    /* determine the shorter distance stored in each of the threads. The shorter distance is what we want */
-    if (THREADS == 1)
+    for (size_t index = 0; index < SAMPLES; index++)
     {
-        for (size_t index = 0; index < SAMPLES; index++)
-            ref_coords[index].position_id_nearest = coords[0][index].position_id_nearest;
+        ref_coords[index].position_id_nearest = get_min(coords, (uint32_t)index, THREADS);
     }
-    else
-    {
-        for (size_t index = 0; index < SAMPLES; index++)
-        {
-            ref_coords[index].position_id_nearest = coords[0][index].distance < coords[1][index].distance
-                                                        ? coords[0][index].position_id_nearest
-                                                        : coords[1][index].position_id_nearest;
-        }
-    }
+
     for (size_t index = 0; index < SAMPLES; index++)
     {
         printf("Position: %zu Latitude: %f Longitude: %f Closest Position Id: %d\n", (index + 1),

@@ -8,7 +8,7 @@
 
 A fairly accurate but computationally more expensive approach to calculating distances between two points using latitude and longitude is by using the Haversine formula. The approach taken here was rather to use another formula that was found to be accurate to within a few metres and computationally less expensive. Although this method of computation is known to produce increasingly higher levels of errors with increasing distances between two points it was found to be adequate for our purposes.
 
-Another approach that was taken to reduce search time was through the use of multi-threading. Two seperate threads were spawned from our main application whereby each thread would only be responsible for searching through one half of the file data i.e. the first thread would search from the start of the file data until mid-point while the second thread would start from mid-point until the end of the file data.
+Another approach that was taken to reduce search time was through the use of multi-threading. Two seperate threads were spawned from our main application whereby each thread would only be responsible for searching through one half of the file data i.e. the first thread would search from the start of the file data until mid-point while the second thread would start from mid-point until the end of the file data. The program will create the number of threads specified by the THREADS macro value and therefore distribute the workload.
 
 # Assumptions:
 
@@ -27,11 +27,7 @@ Note that this is not a fail-safe micro-benchmarking method because:
 - man clock_gettime says that this measure may have discontinuities if you change system time while your program runs. Thi should be a rare event and so should be able to ignore it.
 - this measures Wall time, so if the scheduler forgets about your task, it will appear to run for longer.
 
-Linux provides the prof and gprof profiling tools that will provide valuable inside into which functions take the most time to execute and where optimizations need to be made the mot.
-
-# Shortcomings:
-
-Unfortunately the code currently won't scale beyond two threads due to the way it was written. More thought would need to be applied here although modest gains were observed when compared to the single threaded version.
+Linux provides the prof and gprof profiling tools that will provide valuable inside into which functions take the most time to execute and where optimizations need to be made the mot.SS
 
 #
 

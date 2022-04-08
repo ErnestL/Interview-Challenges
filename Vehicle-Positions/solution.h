@@ -11,7 +11,7 @@
 /* needed for M_PI */
 #define __USE_XOPEN
 
-#define THREADS 2
+#define THREADS 4
 
 /* number of supplied samples */
 #define SAMPLES 10
