@@ -47,7 +47,8 @@ struct vehicle_records
     uint64_t timestamp;
 } __attribute__((packed)) * vehicle_records_ptr;
 
-/* holds total number records in positions.dat */
-uint32_t number_records;
+uint32_t length; /* set in main. Used in thread function */
+
+struct timespec t0, t1;
 
 #endif

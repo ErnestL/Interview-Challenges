@@ -1,4 +1,5 @@
 #include "misc.h"
+#include <float.h>
 #include <math.h>
 
 /*
@@ -6,7 +7,7 @@
  * Parameters: array -> unordered float array, n -> number of items in float array
  * Returns: minimum value in float array
  */
-uint32_t get_min(struct vehicle_ref_coords coord[THREADS][SAMPLES], uint32_t index, uint32_t num_threads)
+uint32_t get_min(const struct vehicle_ref_coords coord[THREADS][SAMPLES], uint32_t index, uint32_t num_threads)
 {
     uint32_t small_index_pos = 0;
 
@@ -29,6 +30,22 @@ float min(float a, float b, uint32_t *pos, uint32_t i)
 }
 
 /*
+ * Description:
+ * Parameters: none
+ * Returns: void
+ */
+void initArray(struct vehicle_ref_coords coords[THREADS][10])
+{
+    for (size_t outer = 0; outer < THREADS; outer++)
+    {
+        for (size_t inner = 0; inner < SAMPLES; inner++)
+        {
+            coords[outer][inner].distance = FLT_MAX;
+        }
+    }
+}
+
+/*
  * Description: calculates distance in kilometers given two lat/lon coordinates
  * Parameter:   lat1 -> latitude from first lat/lon coordinate
  *              lon1 -> longitude from first lat/lon coordinate
@@ -36,7 +53,7 @@ float min(float a, float b, uint32_t *pos, uint32_t i)
  *              lon2 -> longitude from second lat/lon coordinate
  * Returns: float -> distance in kilometers
  */
-inline float gps_distance(float lat1, float lon1, float lat2, float lon2)
+inline float find_distance(float lat1, float lon1, float lat2, float lon2)
 {
     float lat = 0.0F, dx = 0.0F, dy = 0.0F;
     lat = (float)((lat1 + lat2) / 2 * 0.01745);
