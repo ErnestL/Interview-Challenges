@@ -20,7 +20,7 @@ positions in the data file to each of the 10 co-ordinates provided in the table 
   * You are allowed to use any means possible to speed up execution - this is not limited to code/algorithm optimization.
 
 ## How to submit your solution
- * Create a private repository on Github (free)
+ * Create a __PRIVATE__ repository on Github (free)            <--- Very important: Ensure that the repository is __PRIVATE__
  * Update the README.md file:
    * Explain your problem solving approach (design decisions) and your method
    * Specify any assumptions made
