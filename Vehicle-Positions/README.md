@@ -27,11 +27,15 @@ positions in the data file to each of the 10 co-ordinates provided in the table 
  * Add the following contributors to your repository:
    * https://github.com/ErnestL
    * https://github.com/CarloPutter
+   * https://github.com/winstonarendse
+   * https://github.com/GordonJ
  * Create a pull request for your solution
  * Notify us of completion with an email containing your repository URL
    * Nix.Stephens@mixtelematics.com
    * Ernest.Lotter@mixtelematics.com
    * Carlo.Putter@mixtelematics.com
+   * Winston.Arendse@mixtelematics.com
+   * Gordon.Jefferies@mixtelematics.com
 
 ## Additional information
 
