@@ -55,3 +55,33 @@ Position  |1          | 2        | 3         | 4        | 5        | 6         |
 ----------|-----------|----------|-----------|----------|----------|-----------|-----------|----------|----------|------------
 Latitude  |34.544909  |32.345544 |33.234235  |35.195739 |31.895839 |32.895839  |34.115839  |32.335839 |33.535339 |32.234235
 Longitude |-102.100843|-99.123124|-100.214124|-95.348899|-97.789573|-101.789573|-100.225732|-99.992232|-94.792232|-100.222222
+
+
+# Vehicle Positioning Challenge
+Author: Daniel Lombard
+
+# Problem Solving Approach
+Given that speed was of concern when executing this task, it was decided to use a simple Pythagorean aproach was taken. Additionally, the difference in elevation of the vehicles has been ignored. The standard distance between two points formula, d=√((x_2-x_1)²+(y_2-y_1)²), was modified to d²=((x_2-x_1)²+(y_2-y_1)²). This eliminated the costly square root function.
+
+In order to reduce the required computations even further an assumption was made that if both the delta latitude and longitude of a point is larger than another point, then it must be further away, eliminating the need for the distance value to be calculated.
+
+The execution time was determined by using the gettimeofday() method.
+
+
+# Results
+Truck closest to point 1: 1017652
+Truck closest to point 2: 609817
+Truck closest to point 3: 230140
+Truck closest to point 4: 284382
+Truck closest to point 5: 1724293
+Truck closest to point 6: 1442878
+Truck closest to point 7: 108054
+Truck closest to point 8: 1247417
+Truck closest to point 9: 87700
+Truck closest to point 10: 282385
+
+# Assumptions
+The following assumptions were made:
+
+◉ The data contained within the binary file was complete and did not contain any errors, therefore no error checking was used with the fread() functions.
+◉ The wall time was adequate in calculating the execution time
