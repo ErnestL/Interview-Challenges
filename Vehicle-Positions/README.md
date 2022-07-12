@@ -35,6 +35,16 @@ Where,
 
 Consequently the formula looses some accuracy however is usable for this challenge where speed is the priority. This formula computationally inexpensive when compared to the Harvesine since it has fewer terms to evaluate in computing the resultant Euclidean distance.
 
+### Pythegorus Theorem distance formula
+The Pythegorus theorem based distance formula is similar to the Eucladian shortest distance formula however the coordinates do not under go any tranformation which fruther reduces the computaiton complexity. The formula to calculate is derived as follows:
+```
+d=√(x2−x1)2+(y2−y1)2+(z2−z1)2.
+```
+Where,
+* x1,x2 denotes, the latitude coordinates
+* y1,y2 denotes and the longitude coordinates
+* d denotes the distance Euclidean distance between two points in kilometers
+
 # Method
 The 10 reference co-ordinates are stored in a 2D array, which is used an an argument to the shortest distance calculation functions. The binary stream based I/O functions found in the standard C library `fread()` was used to read data from the binary file. Other alternatives such as `read()` and `mmap()` could have been used however sources read suggest that they do not offer notable efficiency towards faster execution times.
 
@@ -141,7 +151,7 @@ usage: ./solution [-a]
 The application can be execute with no argument where in the Euclidian distance formula is used based on the sequentially optimised algorithm
 ```
 $ ./solution
-or $ ./solution -a 3
+or $ ./solution -a 4
 ```
 The slowest of the algorithms that is based on the Harvesine distance formula can be executed as follows
 ```
@@ -151,23 +161,31 @@ The sequentially optimised algorithm that is based on the Harvesine distance for
 ```
 $ ./solution -a 2
 ```
+The sequentially optimised algorithm that is based on the Pythegorean distance formula can be executed as follows
+```
+$ ./solution -a 3
+```
 
 # Results
 ```
-$ ./solution -a 1
-# vehicle nearest to co-ordinate 1 is at position ID 1017652 (0.062534 km away, lat:34.545033, lon:-102.101509)
-# vehicle nearest to co-ordinate 2 is at position ID 609817 (0.249706 km away, lat:32.347542, lon:-99.121910)
-# vehicle nearest to co-ordinate 3 is at position ID 230140 (0.146053 km away, lat:33.233234, lon:-100.215141)
-# vehicle nearest to co-ordinate 4 is at position ID 284382 (0.072297 km away, lat:35.196331, lon:-95.349228)
-# vehicle nearest to co-ordinate 5 is at position ID 1724293 (0.085459 km away, lat:31.895187, lon:-97.789093)
-# vehicle nearest to co-ordinate 6 is at position ID 1442878 (0.208791 km away, lat:32.895908, lon:-101.787338)
-# vehicle nearest to co-ordinate 7 is at position ID 108054 (0.038982 km away, lat:34.115654, lon:-100.225372)
-# vehicle nearest to co-ordinate 8 is at position ID 1247417 (0.158088 km away, lat:32.334568, lon:-99.991478)
-# vehicle nearest to co-ordinate 9 is at position ID 87700 (0.156121 km away, lat:33.536709, lon:-94.791862)
-# vehicle nearest to co-ordinate 10 is at position ID 282385 (0.224669 km away, lat:32.236225, lon:-100.221809)
-wall-time: execution took 3.492529 s
+# ./solution -a 1
+cpu-time (reading binary file): 0.000135 s
+cpu-time (algorithm): 5.934566 s
+# vehicle nearest to co-ordinate 1 is at position ID 1017652 (40075.017000 km away, lat:34.545033, lon:-102.101509)
+# vehicle nearest to co-ordinate 2 is at position ID 2000000 (399.966291 km away, lat:35.020683, lon:-96.232727)
+# vehicle nearest to co-ordinate 3 is at position ID 2000000 (416.795714 km away, lat:35.020683, lon:-96.232727)
+# vehicle nearest to co-ordinate 4 is at position ID 2000000 (82.719882 km away, lat:35.020683, lon:-96.232727)
+# vehicle nearest to co-ordinate 5 is at position ID 2000000 (376.270958 km away, lat:35.020683, lon:-96.232727)
+# vehicle nearest to co-ordinate 6 is at position ID 2000000 (564.228375 km away, lat:35.020683, lon:-96.232727)
+# vehicle nearest to co-ordinate 7 is at position ID 2000000 (379.173344 km away, lat:35.020683, lon:-96.232727)
+# vehicle nearest to co-ordinate 8 is at position ID 2000000 (458.344509 km away, lat:35.020683, lon:-96.232727)
+# vehicle nearest to co-ordinate 9 is at position ID 2000000 (211.646122 km away, lat:35.020683, lon:-96.232727)
+# vehicle nearest to co-ordinate 10 is at position ID 2000000 (482.036466 km away, lat:35.020683, lon:-96.232727)
+
 
 $ ./solution -a 2
+cpu-time (reading binary file): 0.000137 s
+cpu-time (algorithm): 3.799461 s
 # vehicle nearest to co-ordinate 1 is at position ID 1017652 (0.062534 km away, lat:34.545033, lon:-102.101509)
 # vehicle nearest to co-ordinate 2 is at position ID 609817 (0.249706 km away, lat:32.347542, lon:-99.121910)
 # vehicle nearest to co-ordinate 3 is at position ID 230140 (0.146053 km away, lat:33.233234, lon:-100.215141)
@@ -178,7 +196,6 @@ $ ./solution -a 2
 # vehicle nearest to co-ordinate 8 is at position ID 1247417 (0.158088 km away, lat:32.334568, lon:-99.991478)
 # vehicle nearest to co-ordinate 9 is at position ID 87700 (0.156121 km away, lat:33.536709, lon:-94.791862)
 # vehicle nearest to co-ordinate 10 is at position ID 282385 (0.224669 km away, lat:32.236225, lon:-100.221809)
-wall-time: execution took 2.210128 s
 
 $ ./solution -a 3
 # vehicle nearest to co-ordinate 1 is at position ID 1017652 (0.061502 km away, lat:34.545033, lon:-102.101509)
@@ -192,6 +209,28 @@ $ ./solution -a 3
 # vehicle nearest to co-ordinate 9 is at position ID 87700 (0.090852 km away, lat:33.536709, lon:-94.791862)
 # vehicle nearest to co-ordinate 10 is at position ID 282385 (0.124253 km away, lat:32.236225, lon:-100.221809)
 wall-time: execution took 2.229362 s
+
+$ ./solution -a 4
+# position ID 1017652 cpu-time (clock()): 3.962559 s / wall-time 0.502507 s
+# vehicle nearest to co-ordinate 1 is at position ID 1017652 (0.000677 km away, lat:34.545033, lon:-102.101509)
+# position ID 87700 cpu-time (clock()): 3.951474 s / wall-time 0.501901 s
+# vehicle nearest to co-ordinate 9 is at position ID 87700 (0.001419 km away, lat:33.536709, lon:-94.791862)
+# position ID 609817 cpu-time (clock()): 3.995188 s / wall-time 0.507625 s
+# vehicle nearest to co-ordinate 2 is at position ID 609817 (0.002338 km away, lat:32.347542, lon:-99.121910)
+# position ID 108054 cpu-time (clock()): 4.051441 s / wall-time 0.514823 s
+# vehicle nearest to co-ordinate 7 is at position ID 108054 (0.000404 km away, lat:34.115654, lon:-100.225372)
+# position ID 282385 cpu-time (clock()): 4.484888 s / wall-time 0.588267 s
+# vehicle nearest to co-ordinate 10 is at position ID 282385 (0.002032 km away, lat:32.236225, lon:-100.221809)
+# position ID 284382 cpu-time (clock()): 4.689148 s / wall-time 0.628631 s
+# vehicle nearest to co-ordinate 4 is at position ID 284382 (0.000677 km away, lat:35.196331, lon:-95.349228)
+# position ID 1724293 cpu-time (clock()): 4.723861 s / wall-time 0.636750 s
+# vehicle nearest to co-ordinate 5 is at position ID 1724293 (0.000809 km away, lat:31.895187, lon:-97.789093)
+# position ID 230140 cpu-time (clock()): 4.844273 s / wall-time 0.673994 s
+# vehicle nearest to co-ordinate 3 is at position ID 230140 (0.001427 km away, lat:33.233234, lon:-100.215141)
+# position ID 1247417 cpu-time (clock()): 4.729184 s / wall-time 0.664399 s
+# vehicle nearest to co-ordinate 8 is at position ID 1247417 (0.001478 km away, lat:32.334568, lon:-99.991478)
+# position ID 1442878 cpu-time (clock()): 4.792767 s / wall-time 0.701869 s
+# vehicle nearest to co-ordinate 6 is at position ID 1442878 (0.002236 km away, lat:32.895908, lon:-101.787338)
 ```
 The results show that both shortest distance formulas return very similar results with the exception of the difference in the position ID of co-ordinate 8 influenced by the apparent error difference.
 
@@ -200,6 +239,13 @@ The results show that the closest position distance (position ID) to co-ordinate
 
 The Euclidian distance formula is easier to mathematically compute when compared to the optimised Harvesince distance formula, however no execution time (wall time) improvement was observed. It is apparent that the major difference between the two is the computational accuracy than computational complexity for this challenge. The sequentially optimised algorithm where in the binary file is only read once and the shortest distance is calculated for all 10 reference coordinates showed an improvement in the execution time of the application.
 
-Therefore, in order to shorten the execution time further, more effort should be spent to reduce the binary data file search complexity (i.e. optimised sequential access or concurrency). This could be potentially achieved through multi-threading wherein some threads search different parts of the file concurrently. Alternatively, some clever sorting based algorithm could be used on the binary data to ensure that only relevant closest candidate co-ordinates are considered.
+The Pythagoras theorem based distance formula achieved about 60% reduction in cpu time improvement from 2.5 seconds down to 1 second. 9 of the 10 position ID solutions are identical to the Euclidean distance based formular besides the position ID solution for coordinate 8. It is observable that the choice of distance calculation formula and algorithm will depend on the accuracy required and how fast the solution needs to be calculated.
+
+The threaded implementation spawns 10 concurrent threads, each with its own file stream and a single unique coordinate of which the closest distance is required. Each thread read through the entire file, calculates and prints out the shortest distance for the respective coordinate before existing.
+
+In order to shorten the execution time further, more effort should be spent to reduce the binary data file search complexity (i.e. optimised sequential access or concurrency). This could be potentially achieved by revising the threaded solution. Alternatively, some clever sorting based algorithm could be used on the binary data to ensure that only relevant closest candidate co-ordinates are considered.
+
+# Bugs(s):
+The threaded approach correctly calculates the position ID's however the CPU time calculated using the clock() method prints values in the 4 seconds region for each thread. I do not know why this is however I implemented a wall time alternative using gettimeofday() and the results show the threaded approach achieved 0.5 ~ 0.7 seconds execution time no withstanding the fact the OS may prioritise any thread in a manner that may increase the time slightly above a second.
 
 [Back To Top](#vehicle-position-challenge)
