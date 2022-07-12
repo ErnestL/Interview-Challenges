@@ -24,7 +24,7 @@ The formula consists of a number of mathematical computations spanning trigonome
 The Eucladian shortest distance formula calculates the shortest straight line distance between two points by transforming the points to the Cartesian plane (i.e. x, y and z). To achieve this, the formula disregards the elevation and the Cartesian plane does not model the spherical characteristics of the Earth. The formula to calculate is derived as follows:
 ```
 ⃗r=⎛x,y,z⎞=⎛Rcosθcosϕ, Rcosθsinϕ, Rsinθ⎞
-d(r1,r2)=√(x2−x1)2+(y2−y1)2+(z2−z1)2.
+d(r1,r2)=√(x2−x1)2+(y2−y1)2+(z2−z1)2
 ```
 Where,
 * ϕ denotes, the latitude
@@ -38,7 +38,7 @@ Consequently the formula looses some accuracy however is usable for this challen
 ### Pythegorus Theorem distance formula
 The Pythegorus theorem based distance formula is similar to the Eucladian shortest distance formula however the coordinates do not under go any tranformation which fruther reduces the computaiton complexity. The formula to calculate is derived as follows:
 ```
-d=√(x2−x1)2+(y2−y1)2+(z2−z1)2.
+d=√(x2−x1)2+(y2−y1)2
 ```
 Where,
 * x1,x2 denotes, the latitude coordinates
@@ -69,6 +69,16 @@ struct closest{
   double distance;
 };
 ```
+THe following `struct threadArg` data structure was used to store the agruments required for the concurrent thread routines. A file descriptor, thread ID, coordinate ID of the 10 provided and coordinates for which the closest distance is required are used as orguments for the thread routine.
+```C
+struct threadArg{
+pthread_t thread_id;
+FILE *stream;
+int codNum;
+double pin_lat;
+double pin_lon;
+};
+```
 
 ### Harvesine formula based algorithm (slowest)
 Iteratively reads the binary data file 10 times each time calculating the closest vehicle to a single co-ordinate using the Harvesine distance formula. This algorithm rewinds to the beginning of the binary data file for every reference position closest distance calculation using the standard C library method `rewind(stream)`. The wall time increase with an increase in reference position for which the distances are calculated for. Consequently, the binary data file is read `n` times where `n` is equal to the number of reference position of interest, where `n = 10` for this challenge.
@@ -79,16 +89,25 @@ int binaryFindClosestSol1(const double *coordinates, int rows, int cols, FILE *s
 
 ### Optimised Harvesine formula based algorithm (fast)
 Reads the binary data file 1 time, each time calculating the closest vehicle position for all 10 co-ordinates using the Harvesine distance formula. This approach sequentially reads the entire file however for each data record read, the shortest distances are calculated for all 10 reference position before reading the next. With each `fread()` call, the shortest distance is stored if it is mathematically smaller than the last calculated distance. This guarantees that the shortest distances are considered after all binary data records are read.
-```
+```C
 int binaryFindClosestSol2(const double *coordinates, int rows, int cols, FILE *stream, struct stat *meta);
 ```
 
 ### Eucladian formula based algorithm (equally fast)
 Reads the binary data file 1 time, each time calculating the closest vehicle position for all 10 co-ordinates using Eaclidian distance formula. The algorithm is similar to the one above with the exception of the formula used.
-```
+```C
 int binaryFindClosestSol3(const double *coordinates, int rows, int cols, FILE *stream, struct stat *meta);
 long double binaryEuclidian(double pinLat, double pinLon, float dataLat, float dataLon);
 ```
+
+### Pythegorus theorem based algorithm (fastest) with threading
+The threaded implementation spawns 10 concurrent threads, each with its own file stream and a single unique coordinate of which the closest distance is required. Each thread read through the entire file, calculates and prints out the shortest distance for the respective coordinate before existing.
+```C
+int binaryFindClosestSol4(const double *coordinates, int rows, int cols);
+void *binaryFindClosestSol4Thread(void *args);
+long double binaryPythagorean(double pinLat, double pinLon, float dataLat, float dataLon);
+```
+
 # Assumptions
 The following assumptions were made
 
@@ -134,7 +153,7 @@ The application can be compiled using the `make` command as follows:
 $make
 gcc -O0 -g0 -Wall -Wconversion   -c -o solution.o solution.c
 gcc -O0 -g0 -Wall -Wconversion   -c -o binary.o binary.c
-gcc -O0 -g0 -Wall -Wconversion -o solution solution.o binary.o -lm
+gcc -O0 -g0 -Wall -Wconversion -o solution solution.o binary.o -lm -lpthread
 ...
 ```
 
@@ -146,9 +165,9 @@ The help message to the application can be invoked by using the argument `-h` as
 $ ./solution -h
 ./solution: utility to find closest vehicle to given co-ordinates
 usage: ./solution [-a]
--a        algorithm to use [1-slow 2-fast 3-fast-eucladian].
+-a        algorithm to use [1-slow 2-fast 3-fast-eucladian 4-threaded].
 ```
-The application can be execute with no argument where in the Euclidian distance formula is used based on the sequentially optimised algorithm
+The application can be execute with no argument where in the Pythegorean distance formula is used based on the concurrent thread based algorithm
 ```
 $ ./solution
 or $ ./solution -a 4
@@ -245,7 +264,7 @@ The threaded implementation spawns 10 concurrent threads, each with its own file
 
 In order to shorten the execution time further, more effort should be spent to reduce the binary data file search complexity (i.e. optimised sequential access or concurrency). This could be potentially achieved by revising the threaded solution. Alternatively, some clever sorting based algorithm could be used on the binary data to ensure that only relevant closest candidate co-ordinates are considered.
 
-# Bugs(s):
+# Bug(s):
 The threaded approach correctly calculates the position ID's however the CPU time calculated using the clock() method prints values in the 4 seconds region for each thread. I do not know why this is however I implemented a wall time alternative using gettimeofday() and the results show the threaded approach achieved 0.5 ~ 0.7 seconds execution time no withstanding the fact the OS may prioritise any thread in a manner that may increase the time slightly above a second.
 
 [Back To Top](#vehicle-position-challenge)
