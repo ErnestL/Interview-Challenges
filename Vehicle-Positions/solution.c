@@ -7,13 +7,7 @@
  */
 
 #include <stdio.h>
-#include <sys/time.h>
-#include <time.h>
-
 #include "binary.h"
-
-#define COORDROWS 2 /* assumption: 2 rows, latitude and longitude */
-#define COORDCOLS 10 /*assumption: 10 position co-ordinates/location pins given per axis */
 
 const double locPins [COORDROWS][COORDCOLS] = {
   {34.544909, 32.345544, 33.234235, 35.195739, 31.895839, 32.895839, 34.115839, 32.335839, 33.535339, 32.234235}, /* 10 latitude co-ordinates */
@@ -22,23 +16,18 @@ const double locPins [COORDROWS][COORDCOLS] = {
 
 /* function prototypes */
 void usage(char *app);
-int subtime(struct timeval *start, struct timeval *end, struct timeval *diff);
 
 int main(int argc, char **argv)
 {
-  struct timeval startWall, endWall, diffWall;
+  clock_t startCpu, endCpu;
+  double diffCpu;
   FILE *binFile;
   struct stat meta;
   int algo, c, i, j, result;
 
-  startWall.tv_sec = 0;
-  startWall.tv_usec = 0;
-  endWall.tv_sec = 0;
-  endWall.tv_usec = 0;
-  diffWall.tv_sec = 0;
-  diffWall.tv_usec = 0;
+  diffCpu = 0.0;
   binFile = NULL;
-  algo = FAST;
+  algo = THREAD;
   result = 0;
 
   /* process user selection of algorithm to use */
@@ -66,7 +55,7 @@ int main(int argc, char **argv)
           switch (c){
             case 'a':
               algo = atoi(argv[i] + j);
-              if ((algo < SLOW) || (algo > FASTALT)){
+              if ((algo < SLOW) || (algo > THREAD)){
                 fprintf(stderr, "invalid input for argument, see help (-h)\n");
                 return -1;
               }
@@ -100,21 +89,28 @@ int main(int argc, char **argv)
   binaryPrintCoordinates(locPins[0], COORDROWS, COORDCOLS);
 #endif
 
-  gettimeofday(&startWall, NULL); /* start wall-timer watch */
 
-  /* load the binary data file for reading */
-  binFile = fopen(BINDATAFILE, "rb");
-  if (binFile == NULL){
-    fprintf(stderr, "failed to open binary data file %s\n", BINDATAFILE);
-    return -1;
+  if (algo != THREAD){
+    startCpu = clock(); /* start CPU time watch */
+    /* load the binary data file for reading */
+    binFile = fopen(BINDATAFILE, "rb");
+    if (binFile == NULL){
+      fprintf(stderr, "failed to open binary data file %s\n", BINDATAFILE);
+      return -1;
+    }
+
+    /* read file metadata */
+    if (stat(BINDATAFILE, &meta) == -1){
+      fclose(binFile);
+      return -1;
+    }
+
+    /* calculate and print execution time before exiting */
+    endCpu = clock();
+    diffCpu = subtime(startCpu, endCpu);
+    fprintf(stderr, "cpu-time (reading binary file): %6f s\n", diffCpu);
   }
-
-  /* read file metadata */
-  if (stat(BINDATAFILE, &meta) == -1){
-    fclose(binFile);
-    return -1;
-  }
-
+  
   /* load binary data file and do calculations */
   switch (algo){
     case SLOW :
@@ -126,20 +122,20 @@ int main(int argc, char **argv)
     case FASTALT :
       result = binaryFindClosestSol3(locPins[0], COORDROWS, COORDCOLS, binFile, &meta);
       break;
+    case THREAD :
+      startCpu = clock();
+      result = binaryFindClosestSol4(locPins[0], COORDROWS, COORDCOLS);
   }
 
   if (result < 0){
-    fclose(binFile);
+    if (algo != THREAD)
+      fclose(binFile);
     return -1;
   }
 
   /* clean up variables */
-  fclose(binFile);
-
-  /* calculate and print execution time before exiting */
-  gettimeofday(&endWall, NULL);
-  subtime(&startWall, &endWall, &diffWall);
-  fprintf(stderr, "wall-time: execution took %ld.%ld s\n", diffWall.tv_sec, diffWall.tv_usec);
+  if (algo != THREAD)
+    fclose(binFile);
 
   return 0;
 }
@@ -148,29 +144,5 @@ void usage(char *app)
 {
   printf("%s: utility to find closest vehicle to given co-ordinates\n", app);
   printf("usage: %s [-a]\n", app);
-  printf("-a        algorithm to use [1-slow 2-fast 3-fast-eucladian].\n");
-}
-
-/* return difference of two timestamps */
-int subtime(struct timeval *start, struct timeval *end, struct timeval *diff)
-{
-  if ((start == NULL) || (end == NULL) || (diff == NULL)){
-    fprintf(stderr, "null argument(s)\n");
-    return -1;
-  }
-  
-  /* subtract sec part */
-  if (start->tv_sec > end->tv_sec){
-    diff->tv_sec = start->tv_sec - end->tv_sec;
-  } else {
-    diff->tv_sec = end->tv_sec - start->tv_sec;
-  }
-  /* subtract usec part */
-  if (start->tv_usec > end->tv_usec){
-    diff->tv_usec = start->tv_usec - end->tv_usec;
-  } else {
-    diff->tv_usec = end->tv_usec - start->tv_usec;
-  }
-
-  return 0;
+  printf("-a        algorithm to use [1-slow 2-fast 3-fast-eucladian 4-threaded].\n");
 }

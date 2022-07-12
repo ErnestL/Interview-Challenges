@@ -26,8 +26,8 @@ CC = gcc
 
 CFLAGS = -O0 -g0 -Wall -Wconversion
 
-# include math library
-LIB = -lm
+# include math library and pthread library
+LIB = -lm -lpthread
 
 EXE = solution
 SRC = solution.c binary.c

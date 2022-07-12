@@ -16,6 +16,9 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <math.h>
+#include <time.h>
+#include <sys/time.h>
+#include <pthread.h>
 
 #define BINDATAFILE "positions.dat" /* assumption: binary data file name */
 #define VREGLEN 10 /* assumption: maximum vehicle registration characters including Null terminating string */
@@ -25,6 +28,10 @@
 #define SLOW 1 /* use slower iterative solution i.e. binaryFindClosestSol1 */
 #define FAST 2 /* use faster solution i.e. binaryFindClosestSol2 */
 #define FASTALT 3 /* use faster solution i.e. binaryFindClosestSol3 */
+#define THREAD 4 /* use threads to spread solution computational load */
+
+#define COORDROWS 2 /* assumption: 2 rows, latitude and longitude */
+#define COORDCOLS 10 /*assumption: 10 position co-ordinates/location pins given per axis */
 
 /* structure to retrieve binary data file objects */
 struct objects{
@@ -39,7 +46,15 @@ struct closest{
   int32_t posID;
   float lat;
   float lon;
-  double distance;
+  long double distance;
+};
+
+struct threadArg{
+  pthread_t thread_id;
+  FILE *stream;
+  int codNum;
+  double pin_lat;
+  double pin_lon;
 };
 
 /* print 10 position coordinates of interest given */
@@ -67,6 +82,21 @@ int binaryFindClosestSol2(const double *coordinates, int rows, int cols, FILE *s
  *
  */
 int binaryFindClosestSol3(const double *coordinates, int rows, int cols, FILE *stream, struct stat *meta);
+
+/* SOLUTION 4: Using threads
+ * Reads the binary data file 1 time, spread the load of calculating the closest vehicle position using threads
+ */
+int binaryFindClosestSol4(const double *coordinates, int rows, int cols);
+
+void *binaryFindClosestSol4Thread(void *args);
+
 long double binaryEuclidian(double pinLat, double pinLon, float dataLat, float dataLon);
 
+long double binaryPythagorean(double pinLat, double pinLon, float dataLat, float dataLon);
+
+/* return difference of two timestamps */
+double subtime(clock_t start, clock_t end);
+
+/* return difference of two timestamps */
+int subtimeWall(struct timeval *start, struct timeval *end, struct timeval *diff);
 #endif /* BINARY_H_ */
