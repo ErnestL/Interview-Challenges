@@ -19,6 +19,16 @@ positions in the data file to each of the 10 co-ordinates provided in the table 
   * Add code to time execution of the content of the _main()_ function with millisecond accuracy. This includes reading of the file.
   * You are allowed to use any means possible to speed up execution - this is not limited to code/algorithm optimization.
 
+## Minimum acceptance criteria:
+ * Your solution should correctly identify the position IDs of the closest positions
+ * Your solution should find the position IDs in under 500ms when run on our benchmark PC: 1.9GHz, Turbo 4.8Ghz, 4 Cores, 8 Threads
+ * You are allowed 3 submission attempts
+
+## Fast track acceptance criteria:
+ * Your solution should correctly identify the position IDs of the closest positions
+ * Your solution should find the position IDs in under 80ms when run on our benchmark PC: 1.9GHz, Turbo 4.8Ghz, 4 Cores, 8 Threads
+ * You are allowed 1 submission attempts
+
 ## How to submit your solution
  * Create a __PRIVATE__ repository on Github (free)            <--- Very important: Ensure that the repository is __PRIVATE__
  * Update the README.md file:
@@ -64,8 +74,6 @@ Longitude |-102.100843|-99.123124|-100.214124|-95.348899|-97.789573|-101.789573|
    - 1724293
    - 87700
 
-- An efficient version of the benchmark approach when run on a reasonbly modern laptop with basic SSD is expected to run in under 400ms.
-
-- An further optimized approach that focuses on maximum CPU utilization when run on a reasonbly modern laptop with basic SSD and 4 or more cores is expected to run in under 200ms.
-
+- A basic optimized version using the benchmark approach is expected to run in under 400ms.
+- A further optimized approach that e.g. focuses on maximum CPU utilization is expected to run in under 200ms.
 - The current record for finding all position IDs on our benchmarking PC is 29 ms.
