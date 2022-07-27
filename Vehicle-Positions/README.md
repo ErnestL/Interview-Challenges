@@ -55,3 +55,17 @@ Position  |1          | 2        | 3         | 4        | 5        | 6         |
 ----------|-----------|----------|-----------|----------|----------|-----------|-----------|----------|----------|------------
 Latitude  |34.544909  |32.345544 |33.234235  |35.195739 |31.895839 |32.895839  |34.115839  |32.335839 |33.535339 |32.234235
 Longitude |-102.100843|-99.123124|-100.214124|-95.348899|-97.789573|-101.789573|-100.225732|-99.992232|-94.792232|-100.222222
+
+
+## Hints
+
+- 3 out of the 10 position IDs that you are expected to find are:
+   - 1017652
+   - 1724293
+   - 87700
+
+- An efficient version of the benchmark approach when run on a reasonbly modern laptop with basic SSD is expected to run in under 400ms.
+
+- An further optimized approach that focuses on maximum CPU utilization when run on a reasonbly modern laptop with basic SSD and 4 or more cores is expected to run in under 200ms.
+
+- The current record for finding all position IDs on our benchmarking PC is 29 ms.
