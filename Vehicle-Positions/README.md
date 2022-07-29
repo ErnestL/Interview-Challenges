@@ -44,8 +44,6 @@ positions in the data file to each of the 10 co-ordinates provided in the table 
    * Nix.Stephens@mixtelematics.com
    * Ernest.Lotter@mixtelematics.com
    * Carlo.Putter@mixtelematics.com
-   * Winston.Arendse@mixtelematics.com
-   * Gordon.Jefferies@mixtelematics.com
 
 ## Additional information
 
